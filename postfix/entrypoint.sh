@@ -278,6 +278,7 @@ EOF
 
   # RUNIT
   echo "RUNIT - enable services"
+  mkdir /container/runit
   mkdir /container/runit/postfix
   mkdir /container/runit/rsyslog
   cat <<EOFRU >> /container/runit/postfix/run
