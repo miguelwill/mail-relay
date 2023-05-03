@@ -1,0 +1,128 @@
+version: '3.5'
+
+services:
+  mail-relay-postfix:
+    image: hshq/mail-relay/postfix:v1
+    container_name: mail-relay-postfix
+    hostname: mail-relay-postfix
+    restart: unless-stopped
+    networks:
+      - dock-ext-net
+      - int-mail-relay-net
+    ports:
+      - 25:25
+      - 587:587
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/ssl/certs:/etc/ssl/certs:ro
+      - /usr/share/ca-certificates:/usr/share/ca-certificates:ro
+      - /usr/local/share/ca-certificates:/usr/local/share/ca-certificates:ro
+      - /usr/local/share/ca-certificates/selfhosteddata.com-ca.crt:/etc/postfix/tls/selfhosteddata.com-ca.crt:ro
+      - ./mail-relay/postfix/tls:/etc/postfix/tls
+      - ./mail-relay/postfix/sasl:/etc/postfix/sasl
+      - ./mail-relay/postfix/config:/etc/postfix/config
+      #- caddy-certs:/caddycerts:ro
+    environment:
+      - TZ=Etc/UTC
+      - MAIL_FQDN=mail.example.com
+      - POSTMASTER_ADDRESS=postmaster@example.com
+      - INTERNAL_CA_CERT_FILENAME=example.com-ca.crt
+
+  mail-relay-rspamd:
+    image: hshq/mail-relay/rspamd:v1
+    container_name: mail-relay-rspamd
+    hostname: mail-relay-rspamd
+    restart: unless-stopped
+    networks:
+      - dock-ext-net
+      - dock-proxy-net
+      - int-mail-relay-net
+    depends_on:
+      - mail-relay-redis
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/ssl/certs:/etc/ssl/certs:ro
+      - /usr/share/ca-certificates:/usr/share/ca-certificates:ro
+      - /usr/local/share/ca-certificates:/usr/local/share/ca-certificates:ro
+      - v-mail-relay-rspamd-var:/var/lib/rspamd
+      - v-mail-relay-rspamd-conf:/etc/rspamd/local.d
+    environment:
+      - REDIS_HOST=mail-relay-redis
+      - WEB_GUI_PASSWORD_HASH="$2$jb3ytjd8mpxjwn86tipik5w6g7fec8i7$8omkzbh7dgc3e7pzj8h1e1u3y5es37hur6c4g7kfseue9jymk46y"
+      #- IS_ENABLE_PHISHING=true
+      #- CLAMAV_HOST=mail-relay-clamav
+
+#  mail-relay-clamav:
+#    image: clamav/clamav:1.1.0
+#    container_name: mail-relay-clamav
+#    hostname: mail-relay-clamav
+#    restart: unless-stopped
+#    security_opt:
+#      - no-new-privileges:true
+#    networks:
+#      - dock-ext-net
+#      - int-mail-relay-net
+#    volumes:
+#      - /etc/localtime:/etc/localtime:ro
+#      - /etc/timezone:/etc/timezone:ro
+#      - v-mail-relay-clamav:/var/lib/clamav
+
+  mail-relay-redis:
+    image: bitnami/redis:7.0.5
+    container_name: mail-relay-redis
+    hostname: mail-relay-redis
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - int-mail-relay-net
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - v-mail-relay-redis:/bitnami/redis/data
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+volumes:
+  #caddy-certs:
+  #  external: true
+  v-mail-relay-rspamd-var:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./mail-relay/rspamd/var
+  v-mail-relay-rspamd-conf:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./mail-relay/rspamd/conf
+#  v-mail-relay-clamav:
+#    driver: local
+#    driver_opts:
+#      type: none
+#      o: bind
+#      device: ./mail-relay/clamav
+  v-mail-relay-redis:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./mail-relay/redis
+
+networks:
+  dock-ext-net:
+    name: dock-ext
+    external: true
+  dock-proxy-net:
+    name: dock-proxy
+    external: true
+  int-mail-relay-net:
+    driver: bridge
+    internal: true
+    enable_ipv6: false
+    ipam:
+      driver: default
