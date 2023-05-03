@@ -15,5 +15,5 @@ EXPOSE 80/tcp
 
 COPY ./entrypoint.sh /container/entrypoint.sh
 
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/container/entrypoint.sh"]
 CMD exec /usr/bin/supervisord -c /etc/supervisord/supervisord.conf
