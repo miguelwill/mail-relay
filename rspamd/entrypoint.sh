@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if ! [ -f /etc/rspamd/local.d/dkim_signing.conf ]; then
   cat <<EOFDK > /etc/rspamd/local.d/dkim_signing.conf
@@ -138,4 +138,4 @@ stderr_logfile=/dev/stderr
 stderr_logfile_maxbytes=0
 EOFSV
 
-exec "$@"
+/usr/bin/supervisord -c /etc/supervisord/supervisord.conf
