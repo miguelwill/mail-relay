@@ -118,6 +118,7 @@ http {
 }
 EOFNG
 
+mkdir /etc/supervisord
 cat <<EOFSV > /etc/supervisord/supervisord.conf
 [supervisord]
 nodaemon=true
