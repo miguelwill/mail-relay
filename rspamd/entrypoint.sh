@@ -32,7 +32,7 @@ if ! [ -f /etc/rspamd/local.d/worker-controller.inc ]; then
 type = "controller";
 bind_socket = "*:11334";
 EOFDK
-  if [ -z $WEB_GUI_PASSWORD_HASH ]; then
+  if ! [ -z $WEB_GUI_PASSWORD_HASH ]; then
     cat <<EOFDK >> /etc/rspamd/local.d/worker-controller.inc
 password = "$WEB_GUI_PASSWORD_HASH";
 enable_password = "$WEB_GUI_PASSWORD_HASH";
