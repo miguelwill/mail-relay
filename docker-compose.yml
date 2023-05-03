@@ -18,7 +18,6 @@ services:
       - /etc/ssl/certs:/etc/ssl/certs:ro
       - /usr/share/ca-certificates:/usr/share/ca-certificates:ro
       - /usr/local/share/ca-certificates:/usr/local/share/ca-certificates:ro
-      - /usr/local/share/ca-certificates/selfhosteddata.com-ca.crt:/etc/postfix/tls/selfhosteddata.com-ca.crt:ro
       - ./mail-relay/postfix/tls:/etc/postfix/tls
       - ./mail-relay/postfix/sasl:/etc/postfix/sasl
       - ./mail-relay/postfix/config:/etc/postfix/config
