@@ -153,7 +153,7 @@ bounce_queue_lifetime = $QUEUE_LIFETIME_BOUNCE
 maximal_queue_lifetime = $QUEUE_LIFETIME_MAX
 milter_protocol = 6
 milter_default_action = accept
-smtpd_milters = inet:postfix-gateway-rspamd:11332
+smtpd_milters = inet:mail-relay-rspamd:11332
 non_smtpd_milters = $smtpd_milters
 milter_mail_macros =  i {mail_addr} {client_addr} {client_name} {auth_authen}
 
