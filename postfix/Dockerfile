@@ -1,6 +1,6 @@
 FROM debian:bullseye
 
-ENV PATH="/container/scripts:${PATH}"
+ENV PATH="/container:${PATH}"
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -q -y update \
@@ -18,8 +18,10 @@ RUN apt-get -q -y update \
 RUN openssl dhparam -out /etc/postfix/dh1024.pem 1024 \
  && openssl dhparam -out /etc/postfix/dh512.pem 512 
 
+COPY ./entrypoint.sh /container/entrypoint.sh
+
 VOLUME ["/etc/postfix/tls", "/etc/postfix/config"]
-HEALTHCHECK CMD ["/container/scripts/docker-healthcheck.sh"]
+HEALTHCHECK CMD ["/container/docker-healthcheck.sh"]
 ENTRYPOINT ["entrypoint.sh"]
 
 CMD [ "runsvdir","-P", "/etc/service" ]

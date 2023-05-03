@@ -4,7 +4,7 @@
 INITIALIZED="/.initialized"
 if [ ! -f "$INITIALIZED" ]; then
 
-  cat <<EOFHC >  /container/scripts/docker-healthcheck.sh
+  cat <<EOFHC >  /container/docker-healthcheck.sh
 #!/bin/bash
 
 # Check for changes to certificates, reload postfix if different.
@@ -19,7 +19,7 @@ fi
 [[ $(ps aux | grep '[r]unsvdir\|[r]syslogd\|[s]bin/master' | wc -l) -ge '3' ]]
 exit \$?
 EOFHC
-  chmod 755 /container/scripts/docker-healthcheck.sh
+  chmod 755 /container/docker-healthcheck.sh
 
   SSL_CERT_FILENAME=cert.pem
   if [ ! -z ${LETS_ENCRYPT_CERT_FILENAME+x} ]; then
