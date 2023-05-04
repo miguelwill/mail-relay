@@ -242,7 +242,7 @@ submission inet n - n - - smtpd
  -o smtpd_sasl_auth_enable=yes
  -o smtpd_sasl_security_options=noanonymous
  -o cyrus_sasl_config_path=/etc/postfix/sasl
- -o smtpd_sasl_local_domain=mail-gateway
+ -o smtpd_sasl_local_domain=mail-relay-postfix
  -o smtpd_sender_login_maps=hash:/etc/postfix/config/sasl_senders
  -o content_filter=
 
