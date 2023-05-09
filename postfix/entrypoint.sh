@@ -276,6 +276,12 @@ EOF
   mv /etc/postfix/main-new.cf /etc/postfix/main.cf
   mv /etc/postfix/master-new.cf /etc/postfix/master.cf
 
+  # Startup scripts
+  if [ -d /etc/postfix/config/startup ]; then
+    chmod 500 /etc/postfix/config/startup/*.sh
+    run-parts --regex '.*sh$' /etc/postfix/startup
+  fi
+
   # RUNIT
   echo "RUNIT - enable services"
   mkdir /container/runit
