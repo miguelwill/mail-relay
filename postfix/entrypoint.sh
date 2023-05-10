@@ -277,8 +277,8 @@ EOF
   mv /etc/postfix/master-new.cf /etc/postfix/master.cf
 
   # Startup scripts
-  if [ -d /etc/postfix/config/startup ]; then
-    chmod 500 /etc/postfix/config/startup/*.sh
+  if [ -d /etc/postfix/startup ]; then
+    chmod 500 /etc/postfix/startup/*.sh
     run-parts --regex '.*sh$' /etc/postfix/startup
   fi
 
