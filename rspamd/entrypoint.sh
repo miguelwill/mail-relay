@@ -65,7 +65,7 @@ clamav {
   scan_mime_parts = true;
   symbol = "CLAM_VIRUS";
   type = "clamav";
-  servers = "$ANTIVIRUS_HOST:3310";
+  servers = "$CLAMAV_HOST:3310";
   
 }
 
