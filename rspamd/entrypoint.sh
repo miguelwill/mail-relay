@@ -60,13 +60,14 @@ if [ -z $CLAMAV_HOST ]; then
   rm -f /etc/rspamd/local.d/antivirus.conf
 else
  cat <<EOFAV > /etc/rspamd/local.d/antivirus.conf
+enabled = true
 
 clamav {
-  scan_mime_parts = true;
+  action = "reject";
+  scan_mime_parts = false;
   symbol = "CLAM_VIRUS";
   type = "clamav";
   servers = "$CLAMAV_HOST:3310";
-  
 }
 
 EOFAV
