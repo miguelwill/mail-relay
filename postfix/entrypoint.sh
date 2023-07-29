@@ -138,12 +138,13 @@ mailbox_size_limit = 0
 recipient_delimiter = +
 inet_interfaces = all
 inet_protocols = all
-mydestination = 
-relayhost = 
-mynetworks = 
+mydestination =
+relayhost =
+mynetworks = 127.0.0.1/8,192.168.0.0/16
+message_size_limit = 30720000
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
-local_recipient_maps = 
+local_recipient_maps =
 local_transport = error:local mail delivery is disabled
 transport_maps = hash:/etc/postfix/config/transport
 relay_domains = hash:/etc/postfix/config/relay
@@ -159,24 +160,28 @@ milter_mail_macros =  i {mail_addr} {client_addr} {client_name} {auth_authen}
 
 ###### Restrictions ######
 
-smtpd_helo_restrictions = 
+smtpd_helo_restrictions =
+    permit_mynetworks,
     reject_invalid_helo_hostname,
-    reject_non_fqdn_helo_hostname,
-    reject_unknown_helo_hostname
+#    reject_non_fqdn_helo_hostname,
+#    reject_unknown_helo_hostname
 
-smtpd_sender_restrictions = 
+smtpd_sender_restrictions =
+    permit_mynetworks,
     reject_non_fqdn_sender,
     reject_unlisted_sender,
     reject_unauth_destination,
     reject_unknown_sender_domain,
     reject_unauth_pipelining
 
-smtpd_recipient_restrictions = 
+smtpd_recipient_restrictions =
+    permit_mynetworks,
     reject_unauth_destination,
     reject_unknown_sender_domain,
     reject_unauth_pipelining
 
-smtpd_relay_restrictions = 
+smtpd_relay_restrictions =
+    permit_mynetworks,
     reject_unauth_destination
 
 ##### Outgoing Relay Settings #####
