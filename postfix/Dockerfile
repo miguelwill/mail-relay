@@ -3,6 +3,8 @@ FROM debian:bullseye
 ENV PATH="/container:${PATH}"
 ENV DEBIAN_FRONTEND noninteractive
 
+VOLUME /var/log
+
 RUN apt-get -q -y update \
  && apt-get -q -y install --no-install-recommends runit procps nano \
     telnet net-tools postfix arj bzip2 cabextract cpio file openssl \
@@ -11,6 +13,7 @@ RUN apt-get -q -y update \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
  && head -n $(grep -n RULES /etc/rsyslog.conf | cut -d':' -f1) /etc/rsyslog.conf > /etc/rsyslog.conf.new \
  && mv /etc/rsyslog.conf.new /etc/rsyslog.conf \
+ && echo 'mail.*     -/var/log/mail.log' >> /etc/rsyslog.conf \
  && echo '*.*        /dev/stdout' >> /etc/rsyslog.conf \
  && sed -i '/imklog/d' /etc/rsyslog.conf
 
